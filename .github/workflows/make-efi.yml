@@ -19,7 +19,11 @@ jobs:
       - name: Compile SSDTs
         run: |
           cd ACPI
-          iasl *.dsl
+          for acpiSrc in *.dsl
+          do {
+            iasl ${acpiSrc}
+          }
+          done
 
       - name: Prepare artifact
         run: |
