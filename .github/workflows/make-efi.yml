@@ -11,7 +11,7 @@ jobs:
       - name: Download IASL
         run: |
           sudo apt update
-          sudo apt -y install acpica
+          sudo apt -y install acpica-tools
 
       - name: Checkout repository
         uses: actions/checkout@v4
