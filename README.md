@@ -4,6 +4,7 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 
 # Specs
 
+| Model: | HP Pavilion Laptop 14-dv1xxx |
 |---------|------------------------------|
 |Processor| Intel i5-1155G7 (Tiger Lake) |
 |Graphics| Intel Iris Xe |
@@ -12,6 +13,7 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 |WiFi| Realtek RTL8822CE |
 |Audio| Realtek ALC287 |
 |Ports|1x HDMI, 2x USB A, 1x USB C |
+|BIOS| Insyde F.23 |
 
 # macOS Versions (tested)
 
