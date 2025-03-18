@@ -1,61 +1,69 @@
 /*
- * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20240927 (64-bit version)
- * Copyright (c) 2000 - 2023 Intel Corporation
+ * On certain motherboards(mainly Asus X299 boards), not all ports are
+ * mapped in the RTC device. For the majority of the time, users will not notice 
+ * this issue though in extreme circumstances macOS may halt in early booting.
+ * Most prominently seen around the PCI Configuration stage with macOS 11 Big Sur.
  * 
- * Disassembling to symbolic ASL+ operators
- *
- * Disassembly of SSDT-RTC0.aml
- *
- * Original Table Header:
- *     Signature        "SSDT"
- *     Length           0x000000CE (206)
- *     Revision         0x02
- *     Checksum         0x6B
- *     OEM ID           "ACDT"
- *     OEM Table ID     "RtcRange"
- *     OEM Revision     0x00000000 (0)
- *     Compiler ID      "INTL"
- *     Compiler Version 0x20240322 (539231010)
+ * To resolve this, we'll want to create a new RTC device(PNP0B00) with the correct
+ * range.
+ * 
+ * Note that due to AWAC systems having an _STA method already defined, attempting
+ * to set another _STA method in your RTC device will conflict. To resolve this,
+ * SSDT-AWAC should be removed and instead opt for this SSDT instead.
  */
 DefinitionBlock ("", "SSDT", 2, "ACDT", "RtcRange", 0x00000000)
 {
     External (_SB_.PC00.LPCB, DeviceObj)
-    External (_SB_.PC00.LPCB.RTC_, DeviceObj)
+    External (_SB_.PC00.LPCB.RTC, DeviceObj)
 
     Scope (_SB.PC00.LPCB)
     {
-        Scope (RTC)
-        {
-            Method (_STA, 0, NotSerialized)  // _STA: Status
-            {
-                If (_OSI ("Darwin"))
-                {
-                    Return (Zero)
-                }
-                Else
-                {
-                    Return (0x0F)
-                }
-            }
-        }
-
         Device (RTC0)
         {
-            Name (_HID, EisaId ("PNP0B00") /* AT Real-Time Clock */)  // _HID: Hardware ID
+           /*
+            * Change the below _CSR range to match your hardware.
+            *
+            * For this example, we'll use the Asus Strix X299-E Gaming's ACPI, and show how to correct it.
+            * Within the original RTC device, we see that sections 0x70 through 0x77 are mapped:
+            *
+            *    Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
+            *    {
+            *        IO (Decode16,
+            *            0x0070,             // Range Minimum 1
+            *            0x0070,             // Range Maximum 1
+            *            0x01,               // Alignment 1
+            *            0x02,               // Length 1
+            *           )
+            *        IO (Decode16,
+            *            0x0074,             // Range Minimum 2
+            *            0x0074,             // Range Maximum 2
+            *            0x01,               // Alignment 2
+            *            0x04,               // Length 2
+            *           )
+            *        IRQNoFlags ()
+            *            {8}
+            *    })
+            *
+            * Though Asus seems to have forgotten to map sections 0x72 and 0x73 in the first bank, so
+            * we'll want to expand the range to include them under Length 1.
+            * Note that not all boards will be the same, verify with your ACPI tables for both the range and 
+            * missing regions.
+            */
+            
+            Name (_HID, EisaId ("PNP0B00"))  // _HID: Hardware ID
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IO (Decode16,
-                    0x0070,             // Range Minimum
-                    0x0070,             // Range Maximum
-                    0x01,               // Alignment
-                    0x04,               // Length
+                    0x0070,             // Range Minimum 1
+                    0x0070,             // Range Maximum 1
+                    0x01,               // Alignment 1
+                    0x08,               // Length 1      (Expanded to include 0x72 and 0x73)
                     )
                 IO (Decode16,
-                    0x0074,             // Range Minimum
-                    0x0074,             // Range Maximum
-                    0x01,               // Alignment
-                    0x04,               // Length
+                    0x0074,             // Range Minimum 2
+                    0x0074,             // Range Maximum 2
+                    0x01,               // Alignment 2
+                    0x08,               // Length 2
                     )
                 IRQNoFlags ()
                     {8}

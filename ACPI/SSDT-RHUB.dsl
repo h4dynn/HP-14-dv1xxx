@@ -1,40 +1,24 @@
 /*
- * Intel ACPI Component Architecture
- * AML/ASL+ Disassembler version 20240927 (64-bit version)
- * Copyright (c) 2000 - 2023 Intel Corporation
- * 
- * Disassembling to symbolic ASL+ operators
- *
- * Disassembly of SSDT-RHUB.aml
- *
- * Original Table Header:
- *     Signature        "SSDT"
- *     Length           0x0000006D (109)
- *     Revision         0x02
- *     Checksum         0x34
- *     OEM ID           "DRTNIA"
- *     OEM Table ID     "RhubOff"
- *     OEM Revision     0x00001000 (4096)
- *     Compiler ID      "INTL"
- *     Compiler Version 0x20240322 (539231010)
+ * Goal of this SSDT is to shut off the RHUB to force macOS into
+ * manually building ports when the ACPI is screwed up
  */
 DefinitionBlock ("", "SSDT", 2, "DRTNIA", "RhubOff", 0x00001000)
 {
-    External (_SB_.PC00.XHCI.RHUB, DeviceObj)
+    External (_SB_.PC00.XHCI.RHUB, DeviceObj) // Full pathing to RHUB, change to yours
 
-    Scope (_SB.PC00.XHCI.RHUB)
-    {
-        Method (_STA, 0, NotSerialized)  // _STA: Status
+    Scope (_SB.PC00.XHCI.RHUB) // Full pathing to RHUB, change to yours
         {
-            If (_OSI ("Darwin"))
+            Method (_STA, 0, NotSerialized)
             {
-                Return (Zero)
-            }
-            Else
-            {
-                Return (0x0F)
-            }
-        }
-    }
+               If (_OSI ("Darwin"))
+                     {
+                        Return (Zero) // This disables the device only in macOS
+                     }
+                     Else
+                     {
+                        Return (0x0F) // Re-enables it for Windows
+                     }
+           }                    
+        }  
 }
 
