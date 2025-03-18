@@ -4,6 +4,7 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 
 # Specs
 
+|---------|------------------------------|
 |Processor| Intel i5-1155G7 (Tiger Lake) |
 |Graphics| Intel Iris Xe |
 |RAM| 8 GB |
