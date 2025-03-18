@@ -21,11 +21,15 @@ jobs:
           cd ACPI
           iasl *.dsl
 
-      - name: Remove additional files
-        run: rm -rf ACPI/*.dsl README.md .git .github
+      - name: Prepare artifact
+        run: |
+          mkdir -p out/EFI/OC
+          cp -r ACPI Drivers Kexts Resources Tools config.plist OpenCore.efi out/EFI/OC
+          cd out/EFI/OC
+          rm -rf ACPI/*.dsl README.md .git .github
 
       - name: Upload as artifact
         uses: actions/upload-artifact@v4
         with:
           name: "EFI"
-          path: *
+          path: out
