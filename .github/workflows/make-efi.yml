@@ -1,0 +1,31 @@
+name: Create EFI
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download IASL
+        run: |
+          sudo apt update
+          sudo apt -y install acpica
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile SSDTs
+        run: |
+          cd ACPI
+          iasl *.dsl
+
+      - name: Remove additional files
+        run: rm -rf ACPI/*.dsl README.md .git .github
+
+      - name: Upload as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "EFI"
+          path: *
