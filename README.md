@@ -27,7 +27,7 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 - [X] Keyboard
 - [X] Audio
 - [X] Battery percentage
-- [X] All USB ports
+- [?] All USB ports
 - [ ] Graphics acceleration
 - [ ] On-board NVMe
 - [ ] Trackpad
