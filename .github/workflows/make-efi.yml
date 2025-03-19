@@ -12,7 +12,7 @@ jobs:
       - name: Download dependencies
         run: |
           sudo apt update
-          sudo apt -y install acpica-tools bsdtar
+          sudo apt -y install acpica-tools libarchive-tools
 
       - name: Checkout repository
         uses: actions/checkout@v4
