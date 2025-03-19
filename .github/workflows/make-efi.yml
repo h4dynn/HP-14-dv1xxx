@@ -42,10 +42,10 @@ jobs:
               X64/EFI/OC/OpenCore.efi \
               X64/EFI/OC/Drivers/{OpenRuntime,OpenCanopy,ResetNvramEntry}.efi \
               X64/EFI/OC/Tools/OpenShell.efi
-          mkdir -p Resources/Image/Acidanthera/GoldenGate
+          mkdir -p Resources/Image/Acidanthera
           cp OcBinaryData/Drivers/HfsPlus.efi Drivers
           cp -r OcBinaryData/Resources/{Font,Label} Resources
-          cp -r OcBinaryData/Resources/Image/Acidanthera/GoldenGate Resources/Image/Acidanthera/GoldenGate
+          cp -r OcBinaryData/Resources/Image/Acidanthera/GoldenGate Resources/Image/Acidanthera
 
       - name: Prepare artifact
         run: |
