@@ -19,13 +19,7 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 
 - [X] macOS Catalina (10.15.7)
 - [X] macOS Big Sur (11.7.10)
-- [ ] macOS Monterey (12.7.6)
-- [ ] macOS Sequoia (15.3.2)
-
-## Notes
-
-* macOS Monterey and Sequoia fails with `vm_shared_region_start_address() failed`
-  (I think this could be graphics related???)
+- [X] macOS Sequoia (15.3.2)
 
 # Working
 
@@ -56,9 +50,6 @@ This is an *incomplete* attempt to provide Hackintosh for the HP Pavilion 14-dv1
 * WiFi / bluetooth is completely unsupported
 
 * Action keys would probably also work post-install (?)
-
-* For basic graphics, I used [this](https://github.com/lshbluesky/WhateverGreen)
-  of WhateverGreen which includes support for Tiger Lake
 
 # (very limited) BIOS options
 
