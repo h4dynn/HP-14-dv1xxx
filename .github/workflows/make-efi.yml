@@ -9,13 +9,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download IASL
+      - name: Download dependencies
         run: |
           sudo apt update
-          sudo apt -y install acpica-tools
+          sudo apt -y install acpica-tools bsdtar
 
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Checkout OpenCore binaries
+        uses: actions/checkout@v4
+        with:
+          repository: 'acidanthera/OcBinaryData'
+          ref: 'master'
 
       - name: Compile SSDTs
         run: |
@@ -25,6 +31,18 @@ jobs:
             iasl ${acpiSrc}
           }
           done
+
+      - name: Download OpenCore
+        run: |
+          shopt -s extglob
+          latest=$(curl -w '%{url_effective}' -Lso /dev/null https://github.com/acidanthera/OpenCorePkg/releases/latest | cut -d'/' -f8-)
+          curl -Lso- https://github.com/acidanthera/OpenCorePkg/releases/download/${latest}/OpenCore-${latest}-RELEASE.zip |
+            bsdtar --strip-components=3 -x \
+              X64/EFI/OC/OpenCore.efi \
+              X64/EFI/OC/Drivers/{OpenRuntime,OpenCanopy,ResetNvramEntry}.efi \
+              X64/EFI/OC/Tools/OpenShell.efi
+          rm -f Drivers/!(HfsPlus.efi)
+          rm -rf Resources/Audio Resources/Image/Acidanthera/!(GoldenGate)
 
       - name: Prepare artifact
         run: |
