@@ -1,10 +1,11 @@
 name: Create EFI
 
 on:
+  push:
   workflow_dispatch:
 
 jobs:
-  sync:
+  efi:
     runs-on: ubuntu-latest
 
     steps:
