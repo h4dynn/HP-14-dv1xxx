@@ -22,6 +22,7 @@ jobs:
         with:
           repository: 'acidanthera/OcBinaryData'
           ref: 'master'
+          path: 'OcBinaryData'
 
       - name: Compile SSDTs
         run: |
@@ -41,8 +42,8 @@ jobs:
               X64/EFI/OC/OpenCore.efi \
               X64/EFI/OC/Drivers/{OpenRuntime,OpenCanopy,ResetNvramEntry}.efi \
               X64/EFI/OC/Tools/OpenShell.efi
-          rm -f Drivers/!(HfsPlus.efi)
-          rm -rf Resources/Audio Resources/Image/Acidanthera/!(GoldenGate)
+          cp OcBinaryData/Drivers/HfsPlus.efi Drivers
+          cp -r OcBinaryData/Resources/{Font,Image/Acidanthera/GoldenGate,Label} Resources
 
       - name: Prepare artifact
         run: |
